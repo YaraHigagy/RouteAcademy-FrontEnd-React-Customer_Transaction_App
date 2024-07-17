@@ -12,7 +12,7 @@ import { SearchValueContext } from '../../context/SearchValueContext';
 function Customer({customer, index}) {
     // const [transactionsDetails, setTransactionsDetails] = useState(null);
     const [isCustomerSelected, setIsCustomerSelected] = useState(false);
-    const [isCollapseOpen, setIsCollapseOpen] = useState(false);
+    // const [isCollapseOpen, setIsCollapseOpen] = useState(false);
     const { getCustomerTransactions } = useContext(TransactionContext);
     const { setSelectedCustomer, setTransactionsDetails, isSelected, setIsSelected, selectedCustomerId, setSelectedCustomerId, originalList } = useContext(SearchValueContext);
     const size = useWindowSize();
@@ -28,7 +28,7 @@ function Customer({customer, index}) {
         setSelectedCustomer(customer);
         setIsSelected(!isCustomerSelected);
         setSelectedCustomerId(customerId);
-        setIsCollapseOpen(!isCollapseOpen);
+        // setIsCollapseOpen(!isCollapseOpen);
     }
 
     const totalAmount = originalList
@@ -42,7 +42,8 @@ function Customer({customer, index}) {
     }, []);
 
     return <>
-        <li className={`list-group-item list-group-item-action border-0 rounded-2 my-2 ${isCollapseOpen && selectedCustomerId === customer.id ? 'active' : ''}`}
+        {/* <li className={`list-group-item list-group-item-action border-0 rounded-2 my-2 ${isCollapseOpen && selectedCustomerId === customer.id ? 'active' : ''}`} */}
+        <li className={`list-group-item list-group-item-action border-0 rounded-2 my-2 ${selectedCustomerId === customer.id ? 'active' : ''}`}
             role='button' key={customer.id} data-bs-toggle="collapse" data-bs-target={`#collapseExample-${customer.id}`} aria-expanded="false" aria-controls={`collapseExample-${customer.id}`} onClick={() => handleCollapse(customer.id)}>
             {/* <th className='w-5' scope="row">{index + 1}</th> */}
             {/* <div>

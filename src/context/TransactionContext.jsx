@@ -1,10 +1,12 @@
 import axios from "axios";
-import { createContext, useState } from "react";
+import { createContext, useContext, useState } from "react";
+import { ApiAddressContext } from "./ApiAddressContext";
 
 export let TransactionContext = createContext();
 
 function TransactionContextProvider(props) {
 
+    const { apiAddress, setApiAddress } = useContext(ApiAddressContext);
     const [apiError, setApiError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [userId, setUserId] = useState('');
@@ -17,7 +19,7 @@ function TransactionContextProvider(props) {
     }
 
     function addTransaction(transactionId) {
-        return axios.post(`http://localhost:3000/transactions`, {
+        return axios.post(`${apiAddress}transactions`, {
             transactionId
         }, {
             headers
@@ -27,7 +29,7 @@ function TransactionContextProvider(props) {
     }
 
     function getTransactions() {
-        return axios.get(`http://localhost:3000/transactions`, {
+        return axios.get(`${apiAddress}transactions`, {
             headers
         }).then((res) => {
             // setUserId(res.data.data.TransactionOwner);
@@ -38,7 +40,7 @@ function TransactionContextProvider(props) {
     }
 
     function getCustomerTransactions(customer_id) {
-        return axios.get(`http://localhost:3000/transactions?customer_id=${customer_id}`, {
+        return axios.get(`${apiAddress}transactions?customer_id=${customer_id}`, {
             headers
         }).then((res) => {
             // setUserId(res.data.data.TransactionOwner);
@@ -49,14 +51,14 @@ function TransactionContextProvider(props) {
     }
 
     function removeTransaction(transactionId) {
-        return axios.delete(`http://localhost:3000/transactions/${transactionId}`, {
+        return axios.delete(`${apiAddress}transactions/${transactionId}`, {
             headers
         }).then((res) => res)
             .catch((err) => err)
     }
 
     function updateTransaction(transactionId, amount) {
-        return axios.put(`http://localhost:3000/transactions/${transactionId}`, {
+        return axios.put(`${apiAddress}transactions/${transactionId}`, {
             amount
         }, {
             headers
@@ -66,14 +68,14 @@ function TransactionContextProvider(props) {
     }
 
     function clearTransactions() {
-        return axios.delete(`http://localhost:3000/transactions`, {
+        return axios.delete(`${apiAddress}transactions`, {
             headers
         }).then((res) => res)
             .catch((err) => err)
     }
 
     // function getUserOrders() {
-    //     return axios.get(`http://localhost:3000/orders/user/${userId}`, {
+    //     return axios.get(`${apiAddress}orders/user/${userId}`, {
     //         headers
     //     }).then((res) => res.data.find(obj => obj.user._id === userId))
     //         .catch((err) => err)

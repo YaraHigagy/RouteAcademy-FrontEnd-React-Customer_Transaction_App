@@ -1,10 +1,12 @@
 import axios from "axios";
-import { createContext, useState } from "react";
+import { createContext, useContext, useState } from "react";
+import { ApiAddressContext } from "./ApiAddressContext";
 
 export let CustomerContext = createContext();
 
 function CustomerContextProvider(props) {
 
+    const { apiAddress, setApiAddress } = useContext(ApiAddressContext);
     const [apiError, setApiError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [userId, setUserId] = useState('');
@@ -14,10 +16,10 @@ function CustomerContextProvider(props) {
 
     let headers = {
         // token: localStorage.getItem('UserToken')
-    }
+    } 
 
     function addCustomer(customerId) {
-        return axios.post(`http://localhost:3000/customers`, {
+        return axios.post(`${apiAddress}customers`, {
             customerId
         }, {
             headers
@@ -27,7 +29,7 @@ function CustomerContextProvider(props) {
     }
 
     function getCustomers() {
-        return axios.get(`http://localhost:3000/customers`, {
+        return axios.get(`${apiAddress}customers`, {
             headers
         }).then((res) => {
             return res.data;
@@ -36,14 +38,14 @@ function CustomerContextProvider(props) {
     }
 
     function removeCustomer(customerId) {
-        return axios.delete(`http://localhost:3000/customers/${customerId}`, {
+        return axios.delete(`${apiAddress}customers/${customerId}`, {
             headers
         }).then((res) => res)
             .catch((err) => err)
     }
 
     function updateCustomer(customerId, name) {
-        return axios.put(`http://localhost:3000/customers/${customerId}`, {
+        return axios.put(`${apiAddress}customers/${customerId}`, {
             name
         }, {
             headers
@@ -53,14 +55,14 @@ function CustomerContextProvider(props) {
     }
 
     function clearCustomers() {
-        return axios.delete(`http://localhost:3000/customers`, {
+        return axios.delete(`${apiAddress}customers`, {
             headers
         }).then((res) => res)
             .catch((err) => err)
     }
 
     // function getUserOrders() {
-    //     return axios.get(`http://localhost:3000/orders/user/${userId}`, {
+    //     return axios.get(`${apiAddress}orders/user/${userId}`, {
     //         headers
     //     }).then((res) => res.data.find(obj => obj.user._id === userId))
     //         .catch((err) => err)

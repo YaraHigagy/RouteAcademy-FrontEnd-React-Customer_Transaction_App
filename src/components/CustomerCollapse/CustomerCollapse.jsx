@@ -22,6 +22,7 @@ function CustomerCollapse() {
 
     const handleChildClick = (event) => {
         event.stopPropagation();
+        console.log('selectedCustomer:' + selectedCustomer);
     };
 
     useEffect(() => {

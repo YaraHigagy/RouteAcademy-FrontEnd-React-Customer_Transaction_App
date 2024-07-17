@@ -8,6 +8,7 @@ import { CustomerContext } from '../../context/CustomerContext';
 import { TransactionContext } from '../../context/TransactionContext';
 import { SearchValueContext } from '../../context/SearchValueContext';
 import useWindowSize from '../../hooks/useWindowSize';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 function TransactionsTable() {
     const [combinedList, setCombinedList] = useState([]);
@@ -76,10 +77,16 @@ function TransactionsTable() {
     return <>
         <div className='border-bottom pb-3 d-flex flex-wrap justify-content-between align-items-center'>
             <h3 className='h5 fw-bold'>Transactions</h3>
-            <p>Number of Customers: <span className='text-accent fw-bold'>{combinedList?.length}</span></p>
+            <div>
+                <div><span>Number of Customers:</span> <span className='text-accent fw-bold'>{combinedList?.length}</span></div>
+                <div className='d-flex flex-wrap justify-content-between align-items-center'>
+                    <span><FontAwesomeIcon icon="fa-solid fa-circle" size='xs' className='opacity-75 text-danger' /> &lt;= 1000</span> 
+                    <span><FontAwesomeIcon icon="fa-solid fa-circle" size='xs' className='opacity-75 text-success' /> &gt; 1000</span>
+                </div>
+            </div>
         </div>
         <table className="table table-hover text-center">
-            {size.width < 992 &&
+            {size.width > 992 &&
                 <thead>
                     <tr>
                         <th scope="col">#</th>
@@ -89,7 +96,7 @@ function TransactionsTable() {
                     </tr>
                 </thead>
             }
-            <tbody className={`${size.width < 992 && 'table-group-divider'}`}>
+            <tbody className={`${size.width > 992 && 'table-group-divider'}`}>
                 {combinedList?.length > 0 ? (
                     combinedList?.map((combined, index) => (
                         <CustomerTransactionRow customersTransactions={combined} index={index} key={combined.id} />
