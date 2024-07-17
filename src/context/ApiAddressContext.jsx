@@ -6,6 +6,7 @@ export let ApiAddressContext = createContext();
 function ApiAddressContextProvider(props) {
 
     const [apiAddress, setApiAddress] = useState('https://customer-transaction-db-json-server.vercel.app/');
+    // const [apiAddress, setApiAddress] = useState('http://localhost:3000/');
     // const [apiError, setApiError] = useState('');
     // const [isLoading, setIsLoading] = useState(false);
 

@@ -27,7 +27,7 @@ function CustomersTable() {
 
     return <>
         <div>
-            <h3 className='h5 fw-bold border-bottom pb-3'>Customers</h3>
+            <h3 className='h5 fw-bold border-bottom pb-3'>Customers <span className='fs-sm fw-lighter text-end'>(Double Click First)</span></h3>
             <ul className='list-group list-unstyled d-flex flex-wrap flex-row px-md-2'>
                 <div className='col-12 col-md-4 col-lg-12'>
                     <li className='text-end fs-sm pe-2 mb-1'><span>Total Amounts (EGP)</span></li>
@@ -41,7 +41,7 @@ function CustomersTable() {
                         </li>
                     )}
                 </div>
-                {size.width <= 992 && isSelected && 
+                {size.width < 992 && size.width >= 768 && isSelected && 
                     <li className='col-12 col-md-8 px-3'>
                         <CustomerCollapse />
                     </li>

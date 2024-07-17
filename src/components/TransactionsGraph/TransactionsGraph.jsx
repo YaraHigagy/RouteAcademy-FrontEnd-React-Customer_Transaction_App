@@ -5,23 +5,21 @@ import { Tooltip, OverlayTrigger } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import Style from './TransactionsGraph.module.css';
-import { LineChart } from '@mui/x-charts';
+import { BarChart, LineChart } from '@mui/x-charts';
 import { SearchValueContext } from '../../context/SearchValueContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 function TransactionsGraph() {
+
+    const [isLines, setIsLines] = useState(true);
+
     const { selectedCustomer, transactionsDetails, originalList } = useContext(SearchValueContext);
-    // Return null if selectedCustomer is null or undefined
-    // if (!selectedCustomer || !transactionsDetails || transactionsDetails.length === 0) {
-    //     return null;
-    // }
-    // const yAmountsForSelectedCustomer = transactionsDetails ? transactionsDetails.map(obj => obj.amount) : [];
-    // const xDatesForSelectedCustomer = transactionsDetails ? transactionsDetails.map(obj => obj.date) : [];
-
-
 
     const [transactionData, setTransactionData] = useState([]);
     const [xDates, setXDates] = useState([]);
+    const [xCustomers, setXCustomers] = useState([]);
+    const [yTotals, setYTotals] = useState([]);
+    const [yTotalsPerDay, setYTotalsPerDay] = useState([]);
 
     useEffect(() => {
         // Group transactions by customer and date, and sort dates in ascending order
@@ -30,13 +28,15 @@ function TransactionsGraph() {
             if (!acc[customer_id]) {
                 acc[customer_id] = {
                     customerName,
-                    transactions: {}
+                    transactions: {},
+                    totalAmount: 0
                 };
             }
             if (!acc[customer_id].transactions[date]) {
                 acc[customer_id].transactions[date] = [];
             }
             acc[customer_id].transactions[date].push(amount);
+            acc[customer_id].totalAmount += amount;
             return acc;
         }, {});
 
@@ -44,8 +44,18 @@ function TransactionsGraph() {
         const dates = [...new Set(originalList.map(transaction => transaction.date))].sort((a, b) => new Date(a) - new Date(b));
         setXDates(dates);
 
-        // Create the result array for series
-        const data = Object.keys(groupedTransactions).map(customer_id => {
+        // Create the result array for series and compute totals per day
+        const totalsPerDay = dates.map(date => {
+            return originalList
+                .filter(transaction => transaction.date === date)
+                .reduce((sum, transaction) => sum + transaction.amount, 0);
+        });
+
+        // Create the result array for series and compute totals
+        const data = [];
+        const totals = [];
+        const customers = [];
+        for (const customer_id in groupedTransactions) {
             const customerTransactions = groupedTransactions[customer_id].transactions;
             const amounts = dates.map(date => {
                 if (customerTransactions[date]) {
@@ -53,13 +63,21 @@ function TransactionsGraph() {
                 }
                 return 0;
             });
-            return {
+
+            data.push({
                 data: amounts,
                 label: `${groupedTransactions[customer_id].customerName}`
-            };
-        });
+            });
 
+            totals.push(groupedTransactions[customer_id].totalAmount);
+
+            customers.push(groupedTransactions[customer_id].customerName);
+        }
         setTransactionData(data);
+        setYTotals(totals);
+        setXCustomers(customers);
+        setYTotalsPerDay(totalsPerDay);
+
     }, [originalList]);
 
     const renderTooltip = (props, customerName) => (
@@ -68,17 +86,33 @@ function TransactionsGraph() {
         </Tooltip>
     );
 
+    // Calculate the minimum value from yTotalsPerDay and set y-axis minimum value
+    const minYValue = Math.min(...yTotalsPerDay);
+    const yAxisMinValue = minYValue > 0 ? minYValue * 0.975 : minYValue * 1.1;
+
     return <>
         <div className="my-2">
             <div className="card card-body border-0 shadow-sm">
-                <h4 className='h5 fw-bold border-bottom pb-3'>All Transactions for <strong className='text-accent'>All customers</strong></h4>
-                {/* <h4 className='h5 fw-bold border-bottom pb-3'>All Transactions for <strong className='text-accent'>{selectedCustomer.name}</strong></h4> */}
-                <div className='row m-2'>
+                <div className='d-flex justify-content-between align-items-cemter border-bottom pb-3 fw-bold'>
+                    <h4 className='h5 fw-bold'>All Transactions for <strong className='text-accent'>All customers</strong></h4>
+                    <ul className="nav nav-pills fs-sm" id="pills-tab" role="tablist">
+                        <li className="nav-item" role="presentation">
+                            <button className="nav-link active" id="pills-perDay-tab" data-bs-toggle="pill" data-bs-target="#pills-perDay" type="button" role="tab" aria-controls="pills-perDay" aria-selected="true">Amount Per Day</button>
+                        </li>
+                        <li className="nav-item" role="presentation">
+                            <button className="nav-link" id="pills-totals-tab" data-bs-toggle="pill" data-bs-target="#pills-totals" type="button" role="tab" aria-controls="pills-totals" aria-selected="false">Totals</button>
+                        </li>
+                        <li className="nav-item" role="presentation">
+                            <button className="nav-link" id="pills-totalsPerDay-tab" data-bs-toggle="pill" data-bs-target="#pills-totalsPerDay" type="button" role="tab" aria-controls="pills-totalsPerDay" aria-selected="false">Totals Per Day</button>
+                        </li>
+                    </ul>
+                </div>
+                <div className='row m-2' >
                     <ul className='col-lg-4 list-group list-unstyled d-flex flex-row flex-wrap gap-2 px-md-3'>
                         <li className='col-12 text-end fs-sm pe-2 mb-1'><span>Amount (EGP)</span></li>
                         {originalList?.length > 0 ? (
                             originalList?.map((transaction) => (
-                                <OverlayTrigger
+                            <OverlayTrigger
                                 key={transaction.id}
                                 placement="top"
                                 delay={{ show: 250, hide: 400 }}
@@ -98,14 +132,56 @@ function TransactionsGraph() {
                         )}
                     </ul>
                     <div className='col-lg-8 justify-self-center'>
-                    <LineChart
-                        height={400}     // Fixed height for consistency
-                        series={
-                            // [{ data: yAmounts, label: 'Transaction Amount (EGP)' }],
-                            transactionData
-                        }
-                        xAxis={[{ scaleType: 'point', data: xDates }]}
-                    />
+                        <div className="tab-content" id="pills-tabContent">
+                            <div className="tab-pane fade show active" id="pills-perDay" role="tabpanel" aria-labelledby="pills-perDay-tab" tabIndex={0}>
+                                <div>
+                                    {isLines ? (<LineChart
+                                        height={400}     // Fixed height for consistency
+                                        series={
+                                            transactionData
+                                        }
+                                        xAxis={[{ scaleType: 'point', data: xDates }]}
+                                        margin={{ top: 110}}
+                                    />) : (
+                                        <BarChart
+                                        height={400}
+                                        series={
+                                            transactionData
+                                        }
+                                        xAxis={[{ scaleType: 'band', data: xDates }]}
+                                        margin={{ top: 110}}
+                                    />
+                                    )}
+                                    <ul className="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                                        <li className="nav-item" role="presentation">
+                                            <button className="nav-link active" id="pills-lines-tab" data-bs-toggle="pill" data-bs-target="#pills-lines" type="button" role="tab" aria-controls="pills-lines" aria-selected="true" onClick={() => setIsLines(true)}>Lines</button>
+                                        </li>
+                                        <li className="nav-item" role="presentation">
+                                            <button className="nav-link" id="pills-bars-tab" data-bs-toggle="pill" data-bs-target="#pills-bars" type="button" role="tab" aria-controls="pills-bars" aria-selected="false" onClick={() => setIsLines(false)}>Bars</button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div className="tab-pane fade" id="pills-totals" role="tabpanel" aria-labelledby="pills-totals-tab" tabIndex={0}>
+                                <LineChart
+                                    height={400}     // Fixed height for consistency
+                                    series={[
+                                        { data: yTotals, label: 'Total (EGP)' }
+                                    ]}
+                                    xAxis={[{ scaleType: 'point', data: xCustomers }]}
+                                />
+                            </div>
+                            <div className="tab-pane fade" id="pills-totalsPerDay" role="tabpanel" aria-labelledby="pills-totalsPerDay-tab" tabIndex={0}>
+                                <BarChart
+                                    height={400}     // Fixed height for consistency
+                                    series={[
+                                        { data: yTotalsPerDay, label: 'Total (EGP)' }
+                                    ]}
+                                    xAxis={[{ scaleType: 'band', data: xDates }]}
+                                    yAxis={[{ min: yAxisMinValue }]}
+                                />
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -37,6 +37,10 @@ h1, h2, h3, h4, h5, h6, p, small, a {
   font-size: 0.875rem;
 }
 
+.nav-pills .nav-link {--bs-nav-link-color:  rgba(var(--teal), 0.75);}
+.nav-pills .nav-link {--bs-nav-link-hover-color:  rgba(var(--teal), 0.75);}
+.nav-pills .nav-link.active {--bs-nav-pills-link-active-bg: rgba(var(--teal), 0.5);}
+
 /* ========== Costumized Styles ========== */
 .bg-accent {background-color: rgba(var(--teal), 0.05);}
 .text-accent {color: rgba(var(--teal), 0.75);}
