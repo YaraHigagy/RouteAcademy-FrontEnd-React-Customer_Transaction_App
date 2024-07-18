@@ -23,6 +23,22 @@
         {
             "id": 6,
             "name": "Basem Taha"
+        },
+        {
+            "id": 7,
+            "name": "Khaled Mohab"
+        },
+        {
+            "id": 8,
+            "name": "Lara Hisham"
+        },
+        {
+            "id": 9,
+            "name": "Tina Saqr"
+        },
+        {
+            "id": 10,
+            "name": "Zina Waleed"
         }
     ],
     "transactions": [
@@ -86,6 +102,54 @@
             "customer_id": 6,
             "date": "2022-01-02",
             "amount": 850
+        },
+        {
+            "id": 11,
+            "customer_id": 7,
+            "date": "2022-01-01",
+            "amount": 600
+        },
+        {
+            "id": 12,
+            "customer_id": 8,
+            "date": "2022-01-01",
+            "amount": 465
+        },
+        {
+            "id": 13,
+            "customer_id": 10,
+            "date": "2022-01-01",
+            "amount": 2600
+        },
+        {
+            "id": 14,
+            "customer_id": 9,
+            "date": "2022-01-01",
+            "amount": 2100
+        },
+        {
+            "id": 15,
+            "customer_id": 8,
+            "date": "2022-01-02",
+            "amount": 1700
+        },
+        {
+            "id": 16,
+            "customer_id": 7,
+            "date": "2022-01-02",
+            "amount": 540
+        },
+        {
+            "id": 17,
+            "customer_id": 10,
+            "date": "2022-01-02",
+            "amount": 950
+        },
+        {
+            "id": 18,
+            "customer_id": 9,
+            "date": "2022-01-02",
+            "amount": 1200
         }
     ]
 }

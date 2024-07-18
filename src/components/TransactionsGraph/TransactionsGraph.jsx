@@ -107,8 +107,8 @@ function TransactionsGraph() {
                         </li>
                     </ul>
                 </div>
-                <div className='row m-2' >
-                    <ul className='col-lg-4 list-group list-unstyled d-flex flex-row flex-wrap gap-2 px-md-3'>
+                <div className='row align-items-center m-2' >
+                    <ul className='col-lg-4 list-group list-unstyled d-flex flex-row flex-wrap gap-2 px-md-3 h-scroll overflow-auto'>
                         <li className='col-12 text-end fs-sm pe-2 mb-1'><span>Amount (EGP)</span></li>
                         {originalList?.length > 0 ? (
                             originalList?.map((transaction) => (
