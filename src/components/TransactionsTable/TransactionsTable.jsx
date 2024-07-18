@@ -50,6 +50,14 @@ function TransactionsTable() {
                 filteredCombined = filteredCombined.filter(item =>
                     Number(item.amount) >= Number(minAmount) && Number(item.amount) <= Number(maxAmount)
                 );
+            } else if (minAmount) {
+                filteredCombined = filteredCombined.filter(item =>
+                    Number(item.amount) >= Number(minAmount)
+                );
+            } else if (maxAmount) {
+                filteredCombined = filteredCombined.filter(item =>
+                    Number(item.amount) <= Number(maxAmount)
+                );
             }
 
             setCombinedList(filteredCombined); // Update combined list after filtering
