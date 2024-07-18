@@ -9,13 +9,15 @@ import { TransactionContext } from '../../context/TransactionContext';
 import { SearchValueContext } from '../../context/SearchValueContext';
 import useWindowSize from '../../hooks/useWindowSize';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Paginating from '../Paginating/Paginating';
+import usePagination from '../../hooks/usePagination';
 
 function TransactionsTable() {
     const [combinedList, setCombinedList] = useState([]);
-    // const [originalList, setOriginalList] = useState([]);
     const { getCustomers } = useContext(CustomerContext);
     const { getTransactions } = useContext(TransactionContext);
-    const { searchInputValue, setSearchInputValue, minAmount, setMinAmount, maxAmount, setMaxAmount, originalList, setOriginalList } = useContext(SearchValueContext);
+    const { searchInputValue, minAmount, maxAmount, setOriginalList } = useContext(SearchValueContext);
+    const { page, itemsPerPage, pageCount, paginatedData, handlePageChange, handleItemsPerPageChange, updatePaginatedData } = usePagination({totalCount: combinedList.length,});
     const size = useWindowSize();
 
     async function getAllCustomersTransactions() {
@@ -38,22 +40,20 @@ function TransactionsTable() {
         setOriginalList(sortedCombined);
         setCombinedList(sortedCombined);
 
-        const min_Amount = minAmount ? Number(minAmount) : 0;
-        const max_Amount = maxAmount ? Number(maxAmount) : 5000;
+        let filteredCombined = sortedCombined;
+            if (searchInputValue) {
+                filteredCombined = filteredCombined.filter(item =>
+                    item.customerName.toLowerCase().includes(searchInputValue.toLowerCase())
+                );
+            }
+            if (minAmount && maxAmount) {
+                filteredCombined = filteredCombined.filter(item =>
+                    Number(item.amount) >= Number(minAmount) && Number(item.amount) <= Number(maxAmount)
+                );
+            }
 
-        const filteredCombined = sortedCombined.filter(item => {
-            const itemAmount = Number(item.amount);
-            return itemAmount >= min_Amount && itemAmount <= max_Amount;
-        });
-
-        if (searchInputValue) {
-            const finalFilteredCombined = filteredCombined.filter(item => item.customerName.toLowerCase().includes(searchInputValue.toLowerCase()));
-            setCombinedList(finalFilteredCombined);
-        } else if(minAmount && maxAmount) {
-            setCombinedList(filteredCombined);
-        } else {
-            setCombinedList(sortedCombined);
-        }
+            setCombinedList(filteredCombined); // Update combined list after filtering
+            updatePaginatedData(filteredCombined); // Update paginated data
 
         // if(minAmount && maxAmount) {
         //     const filteredCombined = combined.filter(item => (item.amount >= minAmount && item.amount <= maxAmount));
@@ -73,6 +73,10 @@ function TransactionsTable() {
     useEffect(() => {
         getAllCustomersTransactions();
     }, [searchInputValue, minAmount, maxAmount]);
+
+    useEffect(() => {
+        updatePaginatedData(combinedList);
+    }, [combinedList, page, itemsPerPage]);
 
     return <>
         <div className='border-bottom pb-3 d-flex flex-wrap justify-content-between align-items-center'>
@@ -98,7 +102,8 @@ function TransactionsTable() {
             }
             <tbody className={`${size.width > 992 && 'table-group-divider'}`}>
                 {combinedList?.length > 0 ? (
-                    combinedList?.map((combined, index) => (
+                    // combinedList?.map((combined, index) => (
+                        paginatedData?.map((combined, index) => (
                         <CustomerTransactionRow customersTransactions={combined} index={index} key={combined.id} />
                     ))
                 ) : (
@@ -108,6 +113,14 @@ function TransactionsTable() {
                 )}
             </tbody>
         </table>
+        <Paginating
+            totalCount={combinedList.length}
+            onPageChange={handlePageChange}
+            onItemsPerPageChange={handleItemsPerPageChange}
+            currentPage={page}
+            itemsPerPage={itemsPerPage}
+            pageCount={pageCount}
+        />
     </>
 }
 

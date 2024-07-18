@@ -12,6 +12,7 @@ import TransactionContextProvider from './context/TransactionContext';
 import TransactionsTable from './components/TransactionsTable/TransactionsTable';
 import SearchValueContextProvider from './context/SearchValueContext';
 import ApiAddressContextProvider from './context/ApiAddressContext';
+import PaginateContextProvider from './context/PaginateContext';
 
 const router = createBrowserRouter([
   {path:'', element: <Layout />, children: [
@@ -23,13 +24,15 @@ function App() {
   return (
     <>
       <ApiAddressContextProvider>
-        <SearchValueContextProvider>
-          <CustomerContextProvider>
-            <TransactionContextProvider>
-              <RouterProvider router={router}></RouterProvider>
-            </TransactionContextProvider>
-          </CustomerContextProvider>
-        </SearchValueContextProvider>
+        <PaginateContextProvider>
+          <SearchValueContextProvider>
+            <CustomerContextProvider>
+              <TransactionContextProvider>
+                <RouterProvider router={router}></RouterProvider>
+              </TransactionContextProvider>
+            </CustomerContextProvider>
+          </SearchValueContextProvider>
+        </PaginateContextProvider>
       </ApiAddressContextProvider>
     </>
   )
