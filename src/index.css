@@ -7,6 +7,12 @@
     --bg-main: #F8F9FA;
     /* --accent: 2, 178, 175; */
     --teal: 0, 128, 128;
+    --tomato: 255, 99, 71;
+    --olive: 40, 112, 6;
+    --rose: 255, 0, 90;
+    --brown: 110, 20, 0;
+    --sky-blue: 35, 110, 230;
+    --purple: rgba(60, 8, 122, 0.5);
 
     /* Fonts */
     --font-general: "Roboto", sans-serif;
@@ -44,6 +50,12 @@ h1, h2, h3, h4, h5, h6, p, small, a {
 /* ========== Costumized Styles ========== */
 .bg-accent {background-color: rgba(var(--teal), 0.05);}
 .text-accent {color: rgba(var(--teal), 0.75);}
+.bg-teal {background-color: rgba(var(--teal), 0.1);}
+.bg-tomato {background-color: rgba(var(--tomato), 0.1);}
+.bg-olive {background-color: rgba(var(--olive), 0.1);}
+.bg-rose {background-color: rgba(var(--rose), 0.1);}
+.bg-brown {background-color: rgba(var(--brown), 0.1);}
+.bg-purple {background-color: rgba(var(--purple), 0.1);}
 
 .fs-sm {font-size: 0.875rem;}
 
@@ -51,6 +63,8 @@ h1, h2, h3, h4, h5, h6, p, small, a {
 .w-fit {width: fit-content;}
 .h-fit {height: fit-content;}
 
+.circle-sm {width: 2.25rem; height: 2.25rem;}
+.circle-lg {width: 4.25rem; height: 4.25rem;}
 
 
 

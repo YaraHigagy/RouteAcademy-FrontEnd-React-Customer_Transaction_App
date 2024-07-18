@@ -7,12 +7,14 @@ import CustomerCollapse from '../CustomerCollapse/CustomerCollapse';
 import { TransactionContext } from '../../context/TransactionContext';
 import useWindowSize from '../../hooks/useWindowSize';
 import { SearchValueContext } from '../../context/SearchValueContext';
+import useRandomColors from '../../hooks/useRandomColors';
 
 function Customer({customer, index}) {
     const [isCustomerSelected, setIsCustomerSelected] = useState(false);
     const { getCustomerTransactions } = useContext(TransactionContext);
     const { setSelectedCustomer, setTransactionsDetails, isSelected, setIsSelected, selectedCustomerId, setSelectedCustomerId, originalList } = useContext(SearchValueContext);
     const size = useWindowSize();
+    const { color } = useRandomColors();
 
     const handleCollapse = async (customerId) => {
         const transactions = await getCustomerTransactions(customerId);
@@ -37,7 +39,7 @@ function Customer({customer, index}) {
         <li className={`list-group-item list-group-item-action border-0 rounded-2 my-2 ${selectedCustomerId === customer.id ? 'active' : ''}`} 
         id={`customer-${customer.id}`} role='button' key={customer.id} data-bs-toggle="collapse" data-bs-target={`#collapseExample-${customer.id}`} aria-expanded="false" aria-controls={`collapseExample-${customer.id}`} onClick={() => handleCollapse(customer.id)} >
             <div className='d-flex flex-wrap justify-content-start align-items-center'>
-                <div className='bg-accent rounded-circle p-2 fs-sm'>
+                <div className={`bg-${color} rounded-circle p-2 fs-sm circle-sm d-flex justify-content-center align-items-center`}>
                     <span>{customer.name.split(" ").map(word => word.charAt(0).toUpperCase()).join('')}</span>
                 </div>
                 <div className='ps-3'>

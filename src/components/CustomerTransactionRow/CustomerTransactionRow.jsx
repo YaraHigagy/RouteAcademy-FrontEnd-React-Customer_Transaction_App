@@ -4,9 +4,11 @@ import { useState } from 'react';
 
 import Style from './CustomerTransactionRow.module.css';
 import useWindowSize from '../../hooks/useWindowSize';
+import useRandomColors from '../../hooks/useRandomColors';
 
 function CustomerTransactionRow({customersTransactions, index}) {
     const size = useWindowSize();
+    const { color } = useRandomColors();
 
     useEffect(() => {
         
@@ -18,7 +20,7 @@ function CustomerTransactionRow({customersTransactions, index}) {
                 <th className='w-5 align-middle' scope="row">{index + 1}</th>
                 <td>
                     <div className='d-flex flex-wrap justify-content-start align-items-center text-start'>
-                        <div className='bg-accent rounded-circle p-4'>
+                        <div className={`bg-${color} rounded-circle p-4 circle-lg d-flex justify-content-center align-items-center`}>
                             <span>{customersTransactions.customerName.split(" ").map(word => word.charAt(0).toUpperCase()).join('')}</span>
                         </div>
                         <div className='ps-3'>
@@ -43,7 +45,7 @@ function CustomerTransactionRow({customersTransactions, index}) {
             <tr className='rounded-5 my-1' key={customersTransactions.id}>
                 <td colSpan={4} className='border-0'>
                     <div className='d-flex flex-wrap justify-content-start align-items-center px-3 px-md-5 text-start'>
-                        <div className='bg-accent rounded-circle p-4'>
+                        <div className={`bg-${color} rounded-circle p-4 circle-sm d-flex justify-content-center align-items-center`}>
                             <span>{customersTransactions.customerName.split(" ").map(word => word.charAt(0).toUpperCase()).join('')}</span>
                         </div>
                         <div className='ps-3'>
