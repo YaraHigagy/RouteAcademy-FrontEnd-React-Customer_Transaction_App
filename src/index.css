@@ -13,6 +13,10 @@
     --brown: 110, 20, 0;
     --sky-blue: 35, 110, 230;
     --purple: rgba(60, 8, 122, 0.5);
+    --beige: 245, 245, 220;
+    --chocolate: 210, 105, 30;
+    --darkgreen: 0, 100, 0;
+    --midnightblue: 25, 25, 112;
 
     /* Fonts */
     --font-general: "Roboto", sans-serif;
@@ -56,6 +60,10 @@ h1, h2, h3, h4, h5, h6, p, small, a {
 .bg-rose {background-color: rgba(var(--rose), 0.1);}
 .bg-brown {background-color: rgba(var(--brown), 0.1);}
 .bg-purple {background-color: rgba(var(--purple), 0.1);}
+.bg-beige {background-color: rgba(var(--beige), 0.5);}
+.bg-chocolate {background-color: rgba(var(--chocolate), 0.1);}
+.bg-darkgreen {background-color: rgba(var(--darkgreen), 0.1);}
+.bg-midnightblue {background-color: rgba(var(--midnightblue), 0.1);}
 
 .fs-sm {font-size: 0.875rem;}
 
